@@ -1,5 +1,5 @@
 # Storeez API Server
-This is a Ruby evaluation test to create an RESTful API server for a mobile app to consume in order to display questions and get responses.
+This is a Ruby evaluation test to create an RESTful API server to manage the stories of a project management system.
 
 ## Requirements
 Storeez is a project management system that works like PivotalTracker.com (except it is a really scaled-down version).
