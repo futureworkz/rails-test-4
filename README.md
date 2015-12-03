@@ -1,71 +1,62 @@
 # Storeez API Server
-This is a Ruby evaluation test to create a single serving website that allows a group of users to RSVP their attendance for an event.
+This is a Ruby evaluation test to create an RESTful API server for a mobile app to consume in order to display questions and get responses.
 
 ## Requirements
-Survee is a mobile app that let users take a survey.
-This test is to build an API server to support the survee mobile app.
-The API server will store the questions, answers and provide reporting information.
+Storeez is a project management system that works like PivotalTracker.com (except it is a really scaled-down version).
+
+This test is to create an RESTful API server that will manage all the stories of a project and most importantly, the life cycle of a story status.
 
 You will decide the API endpoints and how the API will be used.
 
 You must provide the following APIs:
-- to retrieve a question
-- to add an answer to the the question
-- to provide reporting for a question's results
+- Create a story
+- View a story
+- Update a story (which includes changing the state)
+- Delete a story
 
-Assume that the questions are already created on the server.
-More question types are expected to be added in the future.
+For easier implementation, there is no need to associate a story with a project ie. no need to track any project in this API.
 
-There are currently 3 type of questions:  
-## 1) Open-text Question  
-This question accepts a single open text answer:
+A story will have the following fields:
+- Title
+- Points (1,2,3,4,5,6,etc)
+- Description
+- State
 
-![Open Text Question](images/open-text-question.jpg "Open Text Question")
+The state of a story is unstarted, started, finished, delivered, rejected or accepted.  
+When a story is unstarted, it can only be changed to started.  
+When a story is started, it can only be changed to finished.  
+When a story is finished, it can only be changed to delivered.  
+When a story is delivered, it can only be changed to rejected or accepted.  
+When a story is rejected, it can only be changed to started.  
+When a story is accepted, the state cannot be changed anymore.  
+The API must enforce this state changes (eg. user cannot change a story from unstarted to delivered directly)
 
-For reporting, the API will respond with a list of all the answers by all users:
+Your API should handle errors by giving friendly error messages.
 
-![Open Text Result](images/open-text-result.jpg)
+## Technical Tip
+ActiveRecord objects include ActiveModel Dirty which are a list of methods exposed to track changes made to your ActiveRecord objects.
 
-## 2) Multiple Choice Question  
-This question has a list of choices and will only accept one choice per answer:
+```ruby
+person = Person.new
+person.changed? # => false
 
-![Multiple Choices Question](images/multiple-choice-question.jpg)
+person.name = 'Bob'
+person.changed?       # => true
 
-For reporting, API will respond with the percentage chosen for each choice:
+person.name_changed?  # => true
+person.name_changed?(from: "Uncle Bob", to: "Bob") # => true
 
-![Multiple Choices Result](images/multiple-choice-result.jpg)
+person.name_was       # => "Uncle Bob"
+person.name_change    # => ["Uncle Bob", "Bob"]
 
-## 3) Scale Question
-This question has a minimum and a maximum scale value for the answer. eg. 0 to 100:
+person.name = 'Bill'
+person.name_change    # => ["Uncle Bob", "Bill"]
+```
 
-![Scale Question](images/scale-question.jpg)
-
-For reporting, question will respond with the the average of all answers:
-
-![Scale Result](images/scale-result.jpg)
-
-The initial data for the app are given at the end of this README.
-
-## Technical Note
-All mobile devices have a unique ID called UDID. You should use this to differentiate your users.  
-API must be RESTful and use JSON.  
-API should returns JSON error messages in errors or exceptions.  
-API do not need to implement oauth or security features.  
+For more reading, please refer to http://api.rubyonrails.org/classes/ActiveModel/Dirty.html
 
 ## Rules
 Please refer to the [rules](https://github.com/futureworkz/playbook/tree/master/protocols/ruby-evaluation-test#rules) in our playbook.
 
 ## Submission of Work
 Please refer to our [submission of work](https://github.com/futureworkz/playbook/tree/master/protocols/ruby-evaluation-test#submission-of-work) in our playbook.
-
-## Questions
-What do you like about Ruby?
-
-Which is your favourite programming language?
-- Ruby
-- Python
-- PHP
-- Java
-
-On a scale of 0 to 100%, how much time do you spend on Javascript?
-0 to 100
